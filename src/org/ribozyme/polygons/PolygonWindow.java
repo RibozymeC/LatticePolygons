@@ -157,8 +157,7 @@ public class PolygonWindow extends JFrame
 				calculateTree();
 			
 			if(prop.equals("clickedNode")) {
-				Node node = (Node) e.getNewValue();
-				//canvas.changeBasis(node);
+				canvas.changeLattice((ProjPoint) e.getNewValue());
 				canvas.repaint();
 			}
 		}

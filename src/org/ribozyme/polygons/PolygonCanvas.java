@@ -18,8 +18,10 @@ import java.util.Set;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import org.ribozyme.util.Fraction;
 import org.ribozyme.util.Line;
 import org.ribozyme.util.Point;
+import org.ribozyme.util.ProjPoint;
 
 public class PolygonCanvas extends JPanel
 {
@@ -34,11 +36,15 @@ public class PolygonCanvas extends JPanel
 	
 	LinkedList<Line> lines;
 	
+	// projective point representing the lattice we want to represent
+	ProjPoint lattice;
+	
 	public PolygonCanvas() {
 		setBackground(Color.WHITE);
 		setPreferredSize(new Dimension(SIZE, SIZE));
 		
 		lines = new LinkedList<>();
+		lattice = new ProjPoint();
 		
 		MouseInput mouse = new MouseInput();
 		addMouseListener(mouse);
@@ -46,13 +52,9 @@ public class PolygonCanvas extends JPanel
 		addMouseWheelListener(mouse);
 	}
 	
-	/*
-	void changeBasis(Node node) {
-		point_map = node.point_map();
-		base1 = node.x();
-		base2 = node.y();
+	void changeLattice(ProjPoint p) {
+		lattice = p;
 	}
-	*/
 	
 	List<Line> getLines() {
 		return lines;
@@ -79,15 +81,17 @@ public class PolygonCanvas extends JPanel
 		g2d.setColor(Color.LIGHT_GRAY);
 		g2d.setStroke(new BasicStroke(0.5f));
 		
-		for(int a = -400; a <= 400; a++)
-			for(int b = -400; b <= 400; b++) {
-				//double x = a * base1[0] + b * base2[0];
-				//double y = a * base1[1] + b * base2[1];
-				int px = p2s(a);
-				int py = p2s(b);
-				if(px >= 0 && px <= SIZE && py >= 0 && py <= SIZE)
+		long mod = 1L << lattice.e();
+		for(long c = 0; c < mod; c++) {
+			Fraction basex = new Fraction(c * lattice.x(), mod);
+			Fraction basey = new Fraction(c * lattice.y(), mod);
+			for(long a = basex.negate().ceil() - GRID_LEN/2; a <= basex.negate().floor() + GRID_LEN/2; a++)
+				for(long b = basey.negate().ceil() - GRID_LEN/2; b <= basey.negate().floor() + GRID_LEN/2; b++) {
+					int px = p2s(a + basex.asDouble());
+					int py = p2s(b + basey.asDouble());
 					g2d.fillOval(px - 2, py - 2, 4, 4);
-			}
+				}
+		}
 		
 		g2d.setColor(Color.BLACK);
 		g2d.setStroke(new BasicStroke(1.0f));

@@ -125,7 +125,7 @@ public class TreePanel extends JPanel
 			
 			for(Area area: clickable)
 				if(area.area().contains(x, y)) {
-					firePropertyChange("clickedNode", null, area.node());
+					firePropertyChange("clickedNode", null, area.node().point());
 				}
 		}
 	}
