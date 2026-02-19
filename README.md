@@ -15,6 +15,6 @@ As a little bonus, the left-hand text field shows twice the coefficients in the 
 
 Build
 -----
-You can build the project using `javac` on the `src` folder. A complete build is also available in the Releases section.
+You can build the project using `javac` on the `src` folder. No additional libraries are required. A complete build is also available in the Releases section.
 
-Requires Java version 17 or higher.
+Requires Java version 17 or higher to build and use.
