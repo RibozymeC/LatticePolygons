@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
@@ -24,6 +26,7 @@ public class TreePanel extends JPanel
 	Node tree = null;
 	
 	List<Area> clickable;
+	boolean shifting;
 	
 	public TreePanel()
 	{
@@ -31,9 +34,12 @@ public class TreePanel extends JPanel
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		
 		clickable = new ArrayList<>();
+		shifting = false;
 		
 		MouseInput mouse = new MouseInput();
 		addMouseListener(mouse);
+		KeyInput key = new KeyInput();
+		addKeyListener(key);
 	}
 	
 	public void setTree(Node tree)
@@ -60,8 +66,14 @@ public class TreePanel extends JPanel
 		g.drawOval(x - 15, y - 15, 30, 30);
 		
 		//String c1 = Fraction.valueOf(node.c1()).half().toString();
-		long c1 = node.c1();
-		String label = c1 % 2 == 1 ? String.format("%d/2", c1) : Long.toString(c1 / 2);
+		String label;
+		if(!shifting) {
+			long c1 = node.c1();
+			label = c1 % 2 == 1 ? String.format("%d/2", c1) : Long.toString(c1 / 2);
+		}
+		else {
+			label = String.format("%d:%d", node.point().x(), node.point().y());
+		}
 		int str_width = g.getFontMetrics().stringWidth(label);
 		int str_height = g.getFontMetrics().getHeight();
 		g.drawString(label, x - str_width / 2, y + str_height / 4);
@@ -113,5 +125,22 @@ public class TreePanel extends JPanel
 					firePropertyChange("clickedNode", null, area.node());
 				}
 		}
+	}
+	
+	class KeyInput extends KeyAdapter
+	{
+	    public void keyPressed(KeyEvent e)
+	    {
+	    	if(e.getKeyCode() == KeyEvent.VK_SHIFT)
+	    		shifting = true;
+	    	repaint();
+	    }
+
+	    public void keyReleased(KeyEvent e)
+	    {
+	    	if(e.getKeyCode() == KeyEvent.VK_SHIFT)
+	    		shifting = false;
+	    	repaint();
+	    }
 	}
 }

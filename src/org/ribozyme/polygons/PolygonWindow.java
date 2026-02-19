@@ -97,7 +97,7 @@ public class PolygonWindow extends JFrame
 		
 		setResizable(false);
 		
-		canvas.requestFocusInWindow();
+		tree_panel.requestFocusInWindow();
 	}
 	
 	void marinate(Node node, List<Line> lines)
