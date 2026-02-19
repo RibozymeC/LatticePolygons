@@ -15,6 +15,16 @@ public record Line(Point a, Point b)
 		return g * Util.gcd(dy * p.x() - dx * p.y(), 1L << p.e());
 	}
 	
+	public boolean contains(ProjPoint p)
+	{
+		long dx = a.x() - b.x(), dy = a.y() - b.y();
+		long g = Util.gcd(dx, dy);
+		dx /= g;
+		dy /= g;
+		
+		return (dy * p.x() - dx * p.y()) % (1L << p.e()) == 0;
+	}
+	
 	public Set<Point> points()
 	{
 		long dx = a.x() - b.x();

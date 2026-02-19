@@ -54,7 +54,7 @@ public class TreePanel extends JPanel
 		int x = (int)Math.round(Math.cos(angle) * radius);
 		int y = (int)Math.round(Math.sin(angle) * radius);
 		
-		g.setColor(Color.BLACK);
+		g.setColor(node.optimal() ? Color.RED : Color.BLACK);
 		
 		if(!(x == last_x && y == last_y)) {
 			double dist = Math.hypot(x - last_x, y - last_y);
@@ -64,6 +64,8 @@ public class TreePanel extends JPanel
 			int by = (int)Math.round(y + 15.0 / dist * (last_y - y));
 			g.drawLine(ax, ay, bx, by);
 		}
+		
+		g.setColor(Color.BLACK);
 		
 		g.drawOval(x - 15, y - 15, 30, 30);
 		
