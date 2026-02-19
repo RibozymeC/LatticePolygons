@@ -16,6 +16,8 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import org.ribozyme.util.Fraction;
+
 public class TreePanel extends JPanel
 {
 	private static final long serialVersionUID = 1L;
@@ -65,11 +67,10 @@ public class TreePanel extends JPanel
 		
 		g.drawOval(x - 15, y - 15, 30, 30);
 		
-		//String c1 = Fraction.valueOf(node.c1()).half().toString();
 		String label;
 		if(!shifting) {
 			long c1 = node.c1();
-			label = c1 % 2 == 1 ? String.format("%d/2", c1) : Long.toString(c1 / 2);
+			label = Fraction.valueOf(c1).half().toString();
 		}
 		else {
 			label = String.format("%d:%d", node.point().x(), node.point().y());
