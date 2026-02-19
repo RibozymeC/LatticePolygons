@@ -14,12 +14,19 @@ public record ProjPoint(long x, long y, int e)
 			if(x % 2 == 0 && y % 2 == 0)
 				throw new IllegalArgumentException(String.format("(%d:%d) is not a valid projective point mod %d!", x, y, 1L << e));
 			
-			// we normalize the point so x has smallest non-negative numerical value
+			// we normalize the point so x or y (y if y is unit, otherwise x) has smallest non-negative numerical value
 			long mod = 1L << e;
-			long g = Util.gcd(x, mod);
-			long quot = x / g;
-			this.x = g % mod;
-			this.y = this.x > 0 ? y * Util.mod_inv(quot, mod) % mod : 1;
+			if(y % 2 == 1) {
+				long quot = y;
+				this.x = x * Util.mod_inv(quot, mod) % mod;
+				this.y = 1;
+			}
+			else {
+				long g = Util.gcd(x, mod);
+				long quot = x / g;
+				this.x = g % mod;
+				this.y = this.x > 0 ? y * Util.mod_inv(quot, mod) % mod : 1;
+			}
 		}
 		else {
 			this.x = 0;
