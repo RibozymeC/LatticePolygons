@@ -13,6 +13,8 @@ Pressing shift (anywhere) will replace the coefficients on the Bruhat-Tits tree 
 
 As a little bonus, the left-hand text field shows twice the coefficients in the tree, sorted in breadth-first order.
 
+![Example screenshot.](examplepic.png)
+
 Build
 -----
 You can build the project using `javac` on the `src` folder. No additional libraries are required. A complete build is also available in the Releases section.
