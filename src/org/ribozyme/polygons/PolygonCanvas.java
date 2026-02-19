@@ -18,6 +18,7 @@ import java.util.Set;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import org.ribozyme.util.FracPoint;
 import org.ribozyme.util.Fraction;
 import org.ribozyme.util.Line;
 import org.ribozyme.util.Point;
@@ -104,10 +105,11 @@ public class PolygonCanvas extends JPanel
 		g2d.setColor(Color.RED);
 		Set<Point> points = new HashSet<>();
 		for(Line line: lines) {
-			points.addAll(line.points());
+			points.addAll(lattice.mapToLattice(line).points());
 		}
 		for(Point p: points) {
-			g2d.fillOval(p2s(p.x()) - 3, p2s(p.y()) - 3, 6, 6);
+			FracPoint fp = lattice.mapFromLattice(p);
+			g2d.fillOval(p2s(fp.x().asDouble()) - 3, p2s(fp.y().asDouble()) - 3, 6, 6);
 		}
 	}
 	

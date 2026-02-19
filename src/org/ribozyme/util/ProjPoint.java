@@ -50,6 +50,53 @@ public record ProjPoint(long x, long y, int e)
 		return children;
 	}
 	
+	/**
+	 * maps a point from standard basis coordinates into lattice coordinates
+	 */
+	public Point mapToLattice(Point p)
+	{
+		if(e == 0)
+			return p;
+		
+		if(y == 1)
+			return new Point(p.y() << e, p.x() - x * p.y());
+		
+		if(x == 1)
+			return new Point(p.x() << e, p.y() - y * p.x());
+		
+		throw new RuntimeException("Point " + this + " not normalized!");
+	}
+	
+	/**
+	 * maps a line from standard basis coordinates into lattice coordinates
+	 */
+	public Line mapToLattice(Line l)
+	{
+		return new Line(mapToLattice(l.a()), mapToLattice(l.b()));
+	}
+	
+	/**
+	 * maps a point from lattice coordinates into standard basis coordinates 
+	 */
+	public FracPoint mapFromLattice(Point p)
+	{
+		FracPoint fracp = new FracPoint(p);
+		long mod = 1L << e;
+		
+		if(e == 0)
+			return fracp;
+		
+		if(y == 1) {
+			return new FracPoint(fracp.x().multiply(x, mod).add(fracp.y()), fracp.x().multiply(1, mod));
+		}
+		
+		if(x == 1) {
+			return new FracPoint(fracp.x().multiply(1, mod), fracp.x().multiply(y, mod).add(fracp.y()));
+		}
+		
+		throw new RuntimeException("Point " + this + " not normalized!");
+	}
+	
 	@Override
 	public String toString()
 	{
