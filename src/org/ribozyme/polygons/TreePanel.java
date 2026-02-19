@@ -49,8 +49,11 @@ public class TreePanel extends JPanel
 		this.tree = tree;
 	}
 	
-	public void drawTree(Graphics2D g, Node node, double angle, double angle_incr, double radius, int last_x, int last_y)
+	public void drawTree(Graphics2D g, Node node, double sector_start, double sector_end, int last_x, int last_y)
 	{
+		double radius = 50.0 * node.point().e();
+		double angle = (sector_start + sector_end) / 2;
+		
 		int x = (int)Math.round(Math.cos(angle) * radius);
 		int y = (int)Math.round(Math.sin(angle) * radius);
 		
@@ -84,12 +87,14 @@ public class TreePanel extends JPanel
 		clickable.add(new Area(new Ellipse2D.Float(x - 15, y - 15, 30, 30), node));
 		
 		List<Node> children = node.children();
-		double next_incr = angle_incr / children.size();
-		double next_base = children.size() == 3 ? angle : angle - next_incr / 2;
-		for(int i = 0; i < children.size(); i++) {
+		int n = children.size();
+		
+		double sector_diff = (sector_end - sector_start) / n;
+		
+		for(int i = 0; i < n; i++) {
 			Node child = children.get(i);
 			
-			drawTree(g, child, next_base + i * next_incr, next_incr, radius + 50, x, y);
+			drawTree(g, child, sector_start + i * sector_diff, sector_start + (i + 1) * sector_diff, x, y);
 		}
 	}
 	
@@ -107,8 +112,10 @@ public class TreePanel extends JPanel
 		
 		clickable.clear();
 		
-		if(tree != null)
-			drawTree(g2d, tree, 0.0, 2 * Math.PI, 0.0, 0, 0);
+		if(tree != null) {
+			int n = tree.children().size();
+			drawTree(g2d, tree, -Math.PI / n, 2 * Math.PI - Math.PI / n, 0, 0);
+		}
 	}
 	
 	record Area(Ellipse2D.Float area, Node node)
