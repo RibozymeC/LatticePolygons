@@ -40,7 +40,8 @@ public class PolygonCanvas extends JPanel
 	// projective point representing the lattice we want to represent
 	ProjPoint lattice;
 	
-	public PolygonCanvas() {
+	public PolygonCanvas()
+	{
 		setBackground(Color.WHITE);
 		setPreferredSize(new Dimension(SIZE, SIZE));
 		
@@ -53,26 +54,31 @@ public class PolygonCanvas extends JPanel
 		addMouseWheelListener(mouse);
 	}
 	
-	void changeLattice(ProjPoint p) {
+	void changeLattice(ProjPoint p)
+	{
 		lattice = p;
 	}
 	
-	List<Line> getLines() {
+	List<Line> getLines()
+	{
 		return lines;
 	}
 	
 	// point -> screen
-	int p2s(double x) {
+	int p2s(double x)
+	{
 		return (int) ((x + GRID_LEN / 2) * GRID_CELL);
 	}
 	
 	// screen -> point
 	// rounds to nearest point
-	int s2p(int x) {
+	int s2p(int x)
+	{
 		return (x + GRID_CELL / 2) / GRID_CELL - GRID_LEN / 2;
 	}
 	
-	public void paint(Graphics g) {
+	public void paint(Graphics g)
+	{
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);

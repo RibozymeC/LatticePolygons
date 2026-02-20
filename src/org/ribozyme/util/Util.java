@@ -23,7 +23,7 @@ public class Util
 		if(e == 0) return 1;
 		
 		boolean invert = false;
-		if(e < 0){
+		if(e < 0) {
 			invert = true;
 			e = -e;
 		}
@@ -50,10 +50,12 @@ public class Util
 		a %= mod;
 		a += mod;
 		a %= mod;
-		if(a == 0) throw new ArithmeticException("/ by zero");
+		if(a == 0)
+			throw new ArithmeticException("/ by zero");
+		
 		long t = 0, nt = 1;    
 		long r = mod, nr = a;    
-		while(nr != 0){
+		while(nr != 0) {
 			long q = r / nr;
 			long h = t;
 			t = nt;
