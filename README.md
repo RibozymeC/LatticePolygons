@@ -17,6 +17,13 @@ As a little bonus, the left-hand text field shows twice the coefficients in the 
 
 Build
 -----
-You can build the project using `javac` on the `src` folder. No additional libraries are required. A complete build is also available in the Releases section.
+A complete build is available in the Releases section.
+
+You can also build the project yourself with
+
+	javac -d bin -sourcepath src src/org/ribozyme/polygons/PolygonWindow.java
+	jar -cfe LatticePolygons.jar org.ribozyme.polygons.PolygonWindow -C bin .
+
+No additional libraries are required.
 
 Requires Java version 17 or higher to build and use.
