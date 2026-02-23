@@ -104,6 +104,7 @@ public class TreePanel extends JPanel
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		
+		g2d.setBackground(Color.WHITE);
 		g2d.clearRect(0, 0, WIDTH, HEIGHT);
 		
 		g2d.translate(WIDTH / 2, HEIGHT / 2);
