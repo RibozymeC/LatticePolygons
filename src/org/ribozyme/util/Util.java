@@ -18,7 +18,7 @@ public class Util
 	}
 	
 	/** Calculates b^e mod m.*/
-	static long mod_exp(long b, long e, long m)
+	public static long mod_exp(long b, long e, long m)
 	{
 		if(e == 0) return 1;
 		
@@ -45,7 +45,7 @@ public class Util
 		return y;
 	}
 	
-	static long mod_inv(long a, long mod)
+	public static long mod_inv(long a, long mod)
 	{
 		a %= mod;
 		a += mod;
@@ -67,5 +67,22 @@ public class Util
 		t += mod;
 		t %= mod;
 		return t;
+	}
+
+	public static long pow(long b, int e)
+	{
+		if(e == 0)
+			return 1;
+		
+		long power = 1;
+		while(e > 0)
+		{
+			if((e & 1) == 1)
+				power *= b;
+			b = b * b;
+			e >>= 1;
+		}
+		
+		return power;
 	}
 }

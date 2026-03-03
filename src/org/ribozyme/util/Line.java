@@ -5,24 +5,24 @@ import java.util.Set;
 
 public record Line(Point a, Point b)
 {
-	public long latticePoints(ProjPoint p)
+	public long latticePoints(ProjPoint lattice)
 	{
 		long dx = a.x() - b.x(), dy = a.y() - b.y();
 		long g = Util.gcd(dx, dy);
 		dx /= g;
 		dy /= g;
 		
-		return g * Util.gcd(dy * p.x() - dx * p.y(), 1L << p.e());
+		return g * Util.gcd(dy * lattice.x() - dx * lattice.y(), lattice.mod());
 	}
 	
-	public boolean contains(ProjPoint p)
+	public boolean contains(ProjPoint lattice)
 	{
 		long dx = a.x() - b.x(), dy = a.y() - b.y();
 		long g = Util.gcd(dx, dy);
 		dx /= g;
 		dy /= g;
 		
-		return (dy * p.x() - dx * p.y()) % (1L << p.e()) == 0;
+		return (dy * lattice.x() - dx * lattice.y()) % lattice.mod() == 0;
 	}
 	
 	public Set<Point> points()

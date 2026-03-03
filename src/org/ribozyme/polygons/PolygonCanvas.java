@@ -46,7 +46,6 @@ public class PolygonCanvas extends JPanel
 		setPreferredSize(new Dimension(SIZE, SIZE));
 		
 		lines = new LinkedList<>();
-		lattice = new ProjPoint();
 		
 		MouseInput mouse = new MouseInput();
 		addMouseListener(mouse);
@@ -67,7 +66,7 @@ public class PolygonCanvas extends JPanel
 	// point -> screen
 	int p2s(double x)
 	{
-		return (int) ((x + GRID_LEN / 2) * GRID_CELL);
+		return (int) Math.round((x + GRID_LEN / 2) * GRID_CELL);
 	}
 	
 	// screen -> point
@@ -89,10 +88,11 @@ public class PolygonCanvas extends JPanel
 		g2d.setColor(Color.LIGHT_GRAY);
 		g2d.setStroke(new BasicStroke(0.5f));
 		
-		long mod = 1L << lattice.e();
+		long mod = lattice.mod();
 		for(long c = 0; c < mod; c++) {
 			Fraction basex = new Fraction(c * lattice.x(), mod);
 			Fraction basey = new Fraction(c * lattice.y(), mod);
+			
 			for(long a = basex.negate().ceil() - GRID_LEN/2; a <= basex.negate().floor() + GRID_LEN/2; a++)
 				for(long b = basey.negate().ceil() - GRID_LEN/2; b <= basey.negate().floor() + GRID_LEN/2; b++) {
 					int px = p2s(a + basex.asDouble());
@@ -116,6 +116,7 @@ public class PolygonCanvas extends JPanel
 		}
 		for(Point p: points) {
 			FracPoint fp = lattice.mapFromLattice(p);
+			System.out.println(fp);
 			g2d.fillOval(p2s(fp.x().asDouble()) - 3, p2s(fp.y().asDouble()) - 3, 6, 6);
 		}
 	}

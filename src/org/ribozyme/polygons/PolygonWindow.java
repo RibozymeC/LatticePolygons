@@ -5,7 +5,10 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.beans.PropertyChangeEvent;
@@ -15,7 +18,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
@@ -27,6 +33,7 @@ public class PolygonWindow extends JFrame
 	private static final long serialVersionUID = 1L;
 	
 	int level;
+	int p;
 	PolygonCanvas canvas;
 	TreePanel tree_panel;
 	JTextField coeffs_text;
@@ -35,18 +42,45 @@ public class PolygonWindow extends JFrame
 	{
 		super("Polygon Ehrhardt Linear Terms");
 		
-		Font slider_font = new Font("Uni Sans Heavy", Font.PLAIN, 24);
+		// Font slider_font = new Font("Uni Sans Heavy", Font.PLAIN, 24);
 		Font button_font = new Font("Uni Sans Heavy", Font.PLAIN, 16);
-		UIManager.put("Slider.font", slider_font);
 		UIManager.put("Button.font", button_font);
 		UIManager.put("TextField.font", button_font);
 		UIManager.put("TextField.background", Color.WHITE);
+		UIManager.put("RadioButton.font", button_font.deriveFont(Font.PLAIN, 20));
 		
 		setLayout(new GridBagLayout());
 		
 		ActionHandler handler = new ActionHandler();
 		
 		level = 2;
+		p = 2;
+		
+		{
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 1;
+			c.gridwidth = 1;
+			c.gridheight = 1;
+			c.insets = new Insets(10, 20, 0, 20);
+			
+			JPanel panel = new JPanel(new GridLayout(1, 0, 50, 0));
+			ButtonGroup group = new ButtonGroup();
+			
+			int[] primes = {2, 3, 5};
+			
+			for(int p: primes) {
+				JRadioButton radio = new JRadioButton(Integer.toString(p));
+				panel.add(radio);
+				group.add(radio);
+				radio.addActionListener(handler);
+				radio.setActionCommand(Integer.toString(p));
+				if(p == 2)
+					radio.setSelected(true);
+			}
+			
+			add(panel, c);
+		}
 		
 		{
 			GridBagConstraints c = new GridBagConstraints();
@@ -64,10 +98,25 @@ public class PolygonWindow extends JFrame
 		
 		{
 			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 2;
+			c.gridwidth = 1;
+			c.gridheight = 1;
+			c.insets = new Insets(0, 20, 20, 20);
+			
+			coeffs_text = new JTextField();
+			coeffs_text.setPreferredSize(new Dimension(500, 30));
+			coeffs_text.setEditable(false);
+			
+			add(coeffs_text, c);
+		}
+		
+		{
+			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = 1;
 			c.gridy = 0;
 			c.gridwidth = 1;
-			c.gridheight = 2;
+			c.gridheight = 3;
 			c.insets = new Insets(20, 20, 20, 20);
 			
 			tree_panel = new TreePanel();
@@ -77,33 +126,27 @@ public class PolygonWindow extends JFrame
 			tree_panel.addPropertyChangeListener(handler);
 		}
 		
-		{
-			GridBagConstraints c = new GridBagConstraints();
-			c.gridx = 0;
-			c.gridy = 1;
-			c.gridwidth = 1;
-			c.gridheight = 1;
-			c.insets = new Insets(0, 20, 0, 20);
-			
-			coeffs_text = new JTextField();
-			coeffs_text.setPreferredSize(new Dimension(500, 30));
-			coeffs_text.setEditable(false);
-			
-			add(coeffs_text, c);
-		}
-		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();
 		
 		setResizable(false);
 		
+		reset();
 		tree_panel.requestFocusInWindow();
+	}
+	
+	void reset()
+	{
+		canvas.changeLattice(new ProjPoint(p));
+		canvas.repaint();
+		calculateTree();
 	}
 	
 	void marinate(Node node, List<Line> lines)
 	{
-		if(node.point().e() < level) {
-			ProjPoint p = node.point();
+		if(node.lattice().e() < level) {
+			ProjPoint p = node.lattice();
+			
 			for(ProjPoint np: p.children()) {
 				Node newnode = new Node(lines, np);
 				marinate(newnode, lines);
@@ -116,7 +159,7 @@ public class PolygonWindow extends JFrame
 	{
 		List<Line> lines = canvas.getLines();
 		
-		Node root = new Node(lines, new ProjPoint());
+		Node root = new Node(lines, new ProjPoint(p));
 		marinate(root, lines);
 		
 		List<Long> coeffs = new ArrayList<>();
@@ -146,7 +189,7 @@ public class PolygonWindow extends JFrame
 		window.calculateTree();
 	}
 	
-	class ActionHandler implements MouseWheelListener, PropertyChangeListener
+	class ActionHandler implements ActionListener, MouseWheelListener, PropertyChangeListener
 	{
 		@Override
 		public void propertyChange(PropertyChangeEvent e)
@@ -171,6 +214,15 @@ public class PolygonWindow extends JFrame
 			if(level > 8)
 				level = 8;
 			calculateTree();
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			String cmd = e.getActionCommand();
+			p = Integer.parseInt(cmd);
+			
+			reset();
 		}
 	}
 }

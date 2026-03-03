@@ -51,7 +51,7 @@ public class TreePanel extends JPanel
 	
 	public void drawTree(Graphics2D g, Node node, double sector_start, double sector_end, int last_x, int last_y)
 	{
-		double radius = 50.0 * node.point().e();
+		double radius = 25.0 * node.lattice().e() * node.lattice().p();
 		double angle = (sector_start + sector_end) / 2;
 		
 		int x = (int)Math.round(Math.cos(angle) * radius);
@@ -78,7 +78,7 @@ public class TreePanel extends JPanel
 			label = Fraction.valueOf(c1).half().toString();
 		}
 		else {
-			label = String.format("%d:%d", node.point().x(), node.point().y());
+			label = node.lattice().toString();
 		}
 		int str_width = g.getFontMetrics().stringWidth(label);
 		int str_height = g.getFontMetrics().getHeight();
@@ -133,7 +133,7 @@ public class TreePanel extends JPanel
 			
 			for(Area area: clickable)
 				if(area.area().contains(x, y)) {
-					firePropertyChange("clickedNode", null, area.node().point());
+					firePropertyChange("clickedNode", null, area.node().lattice());
 				}
 		}
 	}
