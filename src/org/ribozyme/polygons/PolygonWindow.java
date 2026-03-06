@@ -67,7 +67,7 @@ public class PolygonWindow extends JFrame
 			JPanel panel = new JPanel(new GridLayout(1, 0, 50, 0));
 			ButtonGroup group = new ButtonGroup();
 			
-			int[] primes = {2, 3, 5};
+			int[] primes = {2, 3, 5, 7};
 			
 			for(int p: primes) {
 				JRadioButton radio = new JRadioButton(Integer.toString(p));
@@ -132,7 +132,6 @@ public class PolygonWindow extends JFrame
 		setResizable(false);
 		
 		reset();
-		tree_panel.requestFocusInWindow();
 	}
 	
 	void reset()
@@ -140,6 +139,7 @@ public class PolygonWindow extends JFrame
 		canvas.changeLattice(new ProjPoint(p));
 		canvas.repaint();
 		calculateTree();
+		tree_panel.requestFocusInWindow();
 	}
 	
 	void marinate(Node node, List<Line> lines)
