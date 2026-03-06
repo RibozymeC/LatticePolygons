@@ -116,7 +116,6 @@ public class PolygonCanvas extends JPanel
 		}
 		for(Point p: points) {
 			FracPoint fp = lattice.mapFromLattice(p);
-			System.out.println(fp);
 			g2d.fillOval(p2s(fp.x().asDouble()) - 3, p2s(fp.y().asDouble()) - 3, 6, 6);
 		}
 	}
