@@ -51,7 +51,7 @@ public class TreePanel extends JPanel
 	
 	public void drawTree(Graphics2D g, Node node, double sector_start, double sector_end, int last_x, int last_y)
 	{
-		double radius = 25.0 * node.lattice().e() * node.lattice().p();
+		double radius = 17.0 * node.lattice().e() * (node.lattice().p() + 1);
 		double angle = (sector_start + sector_end) / 2;
 		
 		int x = (int)Math.round(Math.cos(angle) * radius);
